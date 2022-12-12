@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using DotNetCoreSqlDb.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetCoreSqlDb
 {
@@ -41,8 +43,8 @@ namespace DotNetCoreSqlDb
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            //loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
             {
@@ -56,11 +58,15 @@ namespace DotNetCoreSqlDb
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Todos}/{action=Index}/{id?}");
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints => {
+
+                endpoints.MapControllerRoute(
+                name: "default",
+
+                pattern: "{ controller}/{ action = Index}/{ id ?}");
+
             });
         }
     }
